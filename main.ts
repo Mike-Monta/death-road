@@ -1,3 +1,7 @@
+namespace SpriteKind {
+    export const Powerup = SpriteKind.create()
+    export const power = SpriteKind.create()
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     half = 1
 })
@@ -18,11 +22,20 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`finish`, function (sprite, lo
         half = 0
     }
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.power, function (sprite, otherSprite) {
+    controller.moveSprite(car1, 150, 150)
+    for (let index = 0; index < 4; index++) {
+        tiempo += 1
+        pause(1000)
+    }
+    controller.moveSprite(car1, 100, 100)
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`transparency16`, function (sprite, location) {
     game.over(false)
 })
 let tiempo = 0
 let vueltas = 0
+let car1: Sprite = null
 let half = 0
 scene.setBackgroundColor(1)
 tiles.setTilemap(tilemap`track1`)
@@ -44,10 +57,10 @@ let turbo = sprites.create(img`
     f 2 2 2 2 2 8 8 8 8 2 2 2 2 2 f 
     f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
     f f f f f f f f f f f f f f f f 
-    `, SpriteKind.Player)
-tiles.placeOnTile(turbo, tiles.getTileLocation(16, 29))
+    `, SpriteKind.power)
+tiles.placeOnTile(turbo, tiles.getTileLocation(7, 40))
 half = 1
-let car1 = sprites.create(assets.image`car0`, SpriteKind.Player)
+car1 = sprites.create(assets.image`car0`, SpriteKind.Player)
 let humo = sprites.create(assets.image`humo1`, SpriteKind.Player)
 scene.cameraFollowSprite(car1)
 tiles.placeOnTile(car1, tiles.getTileLocation(7, 32))
@@ -67,15 +80,13 @@ game.onUpdate(function () {
     if (controller.down.isPressed()) {
         car1.setImage(assets.image`car3`)
     }
-    if (controller.right.isPressed() || (controller.up.isPressed() || (controller.down.isPressed() || controller.left.isPressed()))) {
-        humo.setStayInScreen(true)
-        humo.setImage(assets.image`humo1`)
-        humo.follow(car1, 99)
-    }
+})
+game.onUpdateInterval(1000, function () {
+	
 })
 forever(function () {
     scene.setBackgroundImage(assets.image`Fire 1`)
-    pause(500)
+    pause(400)
     scene.setBackgroundImage(assets.image`Fire 2`)
-    pause(500)
+    pause(400)
 })
